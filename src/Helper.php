@@ -1,6 +1,6 @@
 <?php
 
-namespace Validation;
+namespace EnjoyValidator;
 
 class Helper
 {

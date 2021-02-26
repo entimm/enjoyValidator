@@ -1,6 +1,6 @@
 <?php
 
-namespace Validation;
+namespace EnjoyValidator;
 
 use DateTime;
 
