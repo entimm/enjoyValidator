@@ -148,18 +148,24 @@ class Rule
     }
 
     /**
-     * 数字不小于
+     * 不小于（数字、数组计数、字符长度）
      */
     public function ruleMin($value, $field, $min)
     {
+        if (is_countable($value)) $value = count($value);
+        elseif (is_string($value)) $value = strlen($value);
+
         return $min <= $value;
     }
 
     /**
-     * 数字不大于
+     * 不大于（数字、数组计数、字符长度）
      */
     public function ruleMax($value, $field, $max)
     {
+        if (is_countable($value)) $value = count($value);
+        elseif (is_string($value)) $value = strlen($value);
+
         return $max >= $value;
     }
 
@@ -168,59 +174,10 @@ class Rule
      */
     public function ruleBetween($value, $field, $min, $max)
     {
+        if (is_countable($value)) $value = count($value);
+        elseif (is_string($value)) $value = strlen($value);
+
         return $max >= $value && $value >= $min;
-    }
-
-    /**
-     * 字符长度不小于
-     */
-    public function ruleLengthMin($value, $field, $min)
-    {
-        return $min <= $this->stringLength($value);
-    }
-
-    /**
-     * 字符长度不大于
-     */
-    public function ruleLengthMax($value, $field, $max)
-    {
-        return $max >= $this->stringLength($value);
-    }
-
-    /**
-     * 字符长度区间
-     */
-    public function ruleLengthBetween($value, $field, $min, $max)
-    {
-        $length = $this->stringLength($value);
-
-        return $max >= $length && $length >= $min;
-    }
-
-    /**
-     * 数组项数不小于
-     */
-    public function ruleCountMin($value, $field, $min)
-    {
-        return $min <= count($value);
-    }
-
-    /**
-     * 数组项数不大于
-     */
-    public function ruleCountMax($value, $field, $max)
-    {
-        return $max >= count($value);
-    }
-
-    /**
-     * 数组项数区间
-     */
-    public function ruleCountBetween($value, $field, $min, $max)
-    {
-        $count = count($value);
-
-        return $max >= $count && $count >= $min;
     }
 
     /**
