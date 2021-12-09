@@ -33,6 +33,7 @@ try {
         'order_id' => 123456789,
         'user_ids' => '11,12,13',
         'email' => '1194316669@qq.com',
+        'phone_no' => '123',
     ])->handle([
         'order_id' => 'required|number',
         'start_date' => 'date|to_date_time_start',
@@ -40,6 +41,7 @@ try {
         'optional_field' => 'optional',
         'default_field' => 'default:1',
         'user_ids' => 'to_array|item:number'
+        'phone_no' => ['length_min' => 10],
     ])->data();
     print_r($data);
 } catch (Exception $e) {

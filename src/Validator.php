@@ -185,7 +185,7 @@ class Validator
                 $rules = explode('|', $rules);
             }
             foreach ($rules as $key => $rule) {
-                list($rule, $args) = $this->parseRule($rule, !is_int($key));
+                list($rule, $args) = $this->parseRule($rule, $key);
                 $this->onField($field, $rule, ...$args);
             }
         }
@@ -204,8 +204,8 @@ class Validator
                 if (is_string($rules)) {
                     $rules = explode('|', $rules);
                 }
-                foreach ($rules as $key => $item) {
-                    list($rule, $args) = $this->parseRule($item, !is_int($key));
+                foreach ($rules as $key => $rule) {
+                    list($rule, $args) = $this->parseRule($rule, $key);
                     $value = $this->getValue($field);
                     if (!$this->valid($field, $value, $rule, $args)) {
                         $valid = false;
@@ -243,7 +243,7 @@ class Validator
      */
     protected function parseRule($rule, $name = null)
     {
-        if (!$name) {
+        if (is_int($name)) {
             $parts = explode(':', $rule);
             $rule = $parts[0];
 
@@ -257,8 +257,7 @@ class Validator
                 return $arg;
             }, $args);
         } else {
-            $rule = $name;
-            $args = $rule;
+            list($rule, $args) = [$name, [$rule]];
         }
 
         return [$rule, $args];
