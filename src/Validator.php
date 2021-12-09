@@ -62,6 +62,16 @@ class Validator
     private $messageTpls = [];
 
     /**
+     * 直接采取抛异常的方式
+     */
+    private $throwErr = false;
+
+    /**
+     * 错误信息
+     */
+    private $errors = [];
+
+    /**
      * 当字段为空时，也必须验证的规则
      */
     const MUST = [
@@ -87,9 +97,23 @@ class Validator
     /**
      * 工厂方法
      */
-    public static function make($data)
+    public static function make($data, $rules = [], $messages = [], $alias = [])
     {
-        return new self($data);
+        $v = new self($data);
+
+        if ($messages) {
+            $v->messages($messages);
+        }
+
+        if ($rules) {
+            $v->rules($rules);
+        }
+
+        if ($alias) {
+            $v->alias($alias);
+        }
+
+        return $v;
     }
 
     /**
@@ -162,7 +186,11 @@ class Validator
             }, $this->messageTpls[$rule]);
         }
 
-        throw new InvalidArgumentException($msg);
+        if ($this->throwErr) {
+            throw new InvalidArgumentException($msg);
+        }
+
+        $this->errors[$field][] = $msg;
     }
 
     /**
@@ -171,15 +199,19 @@ class Validator
     public function rules($ruleGroup)
     {
         $this->ruleGroup = $ruleGroup;
+
+        return $this;
     }
 
     /**
-     * 传入所有字段及验证规则进行处理
      * @throws InvalidArgumentException
      */
-    public function handle($ruleGroup = [])
+    public function handle()
     {
-        $ruleGroup = $ruleGroup ?: $this->ruleGroup;
+        $ruleGroup = $this->ruleGroup;
+
+        if (!$ruleGroup)  return $this;
+
         foreach ($ruleGroup as $field => $rules) {
             if (is_string($rules)) {
                 $rules = explode('|', $rules);
@@ -273,6 +305,31 @@ class Validator
         }
 
         return isset($this->fields[$field]) ? $this->fields[$field] : [];
+    }
+
+    /**
+     * @return bool
+     */
+    public function throwErr()
+    {
+        return $this->throwErr = true;
+    }
+
+    /**
+     * @return array
+     */
+    public function errors()
+    {
+        return $this->errors;
+    }
+
+    public function firstError($field = null)
+    {
+        if ($field) {
+            return $this->errors[$field][0] ?? false;
+        }
+
+        return reset($this->errors)[0] ?? false;
     }
 
     /**

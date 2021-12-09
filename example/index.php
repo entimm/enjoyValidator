@@ -29,21 +29,23 @@ Validator::globalAlias([
 ]);
 
 try {
-    $data = Validator::make([
+    $v = Validator::make([
         'order_id' => 123456789,
         'user_ids' => '11,12,13',
         'email' => '1194316669@qq.com',
         'phone_no' => '123',
-    ])->handle([
+    ])->rules([
         'order_id' => 'required|number',
         'start_date' => 'date|to_date_time_start',
         'end_date' => 'required|date',
         'optional_field' => 'optional',
         'default_field' => 'default:1',
-        'user_ids' => 'to_array|item:number'
+        'user_ids' => 'to_array|item:number',
         'phone_no' => ['length_min' => 10],
-    ])->data();
-    print_r($data);
+    ])->handle();
+    print_r($v->errors());
+    print_r($v->firstError().PHP_EOL);
+    print_r($v->firstError('phone_no').PHP_EOL);
 } catch (Exception $e) {
     echo $e->getMessage(). PHP_EOL;
 }
