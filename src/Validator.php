@@ -2,6 +2,7 @@
 
 namespace EnjoyValidator;
 
+use Closure;
 use InvalidArgumentException;
 
 class Validator
@@ -40,6 +41,11 @@ class Validator
      * 规则处理器获取方法
      */
     private static $ruleResolver = null;
+
+    /**
+     * 外部注册的规则
+     */
+    private static $registerRules = [];
 
     /**
      * 消息
@@ -263,6 +269,10 @@ class Validator
      */
     protected function valid($field, $value, $rule, $args)
     {
+        if (isset(self::$registerRules[$rule])) {
+            return call_user_func(self::$registerRules[$rule], $value, $this);
+        }
+
         $method = 'rule'.ucwords(implode(array_map(function ($item) {
                 return ucwords($item);
             }, explode('_', $rule))));
@@ -404,5 +414,13 @@ class Validator
     public static function ruleResolver($resolver)
     {
         self::$ruleResolver = $resolver;
+    }
+
+    /**
+     * 注入规则验证器
+     */
+    public static function registerRule($name, callable $rule)
+    {
+        self::$registerRules[$name] = $rule;
     }
 }

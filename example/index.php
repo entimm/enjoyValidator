@@ -28,12 +28,27 @@ Validator::globalAlias([
     'end_date' => '结束日期',
 ]);
 
+class BarValidate
+{
+    public function validate($value)
+    {
+        return $value === 'bar';
+    }
+}
+
+Validator::registerRule('foo', function ($value) {
+    return $value === 'foo';
+});
+Validator::registerRule('bar', [new BarValidate, 'validate']);
+
 try {
     $v = Validator::make([
         'order_id' => 123456789,
         'user_ids' => '11,12,13',
         'email' => '1194316669@qq.com',
         'phone_no' => '123',
+        'my_foo' => 'not_foo',
+        'my_bar' => 'not_bar',
     ])->rules([
         'order_id' => 'required|number',
         'start_date' => 'date|to_date_time_start',
@@ -42,6 +57,11 @@ try {
         'default_field' => 'default:1',
         'user_ids' => 'to_array|item:number',
         'phone_no' => ['length_min' => 10],
+        'my_foo' => ['foo'],
+        'my_bar' => 'bar',
+    ])->messages([
+        'my_foo.foo' => 'my_foo不满足foo',
+        'my_bar.bar' => 'my_bar不满足foo',
     ])->handle();
     print_r($v->errors());
     print_r($v->firstError().PHP_EOL);
