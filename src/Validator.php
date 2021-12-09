@@ -271,7 +271,7 @@ class Validator
     protected function valid($field, $value, $rule, $args)
     {
         if (isset(self::$registeredRules[$rule])) {
-            return call_user_func(self::$registeredRules[$rule], $value, $field, $this);
+            return call_user_func(self::$registeredRules[$rule], $value, $field, $this, ...$args);
         }
 
         $method = 'rule'.ucwords(implode(array_map(function ($item) {
