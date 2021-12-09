@@ -42,6 +42,11 @@ Validator::registerRule('foo', function ($value) {
 Validator::registerRule('bar', [new BarValidate, 'validate']);
 Validator::registerRule('random', function ($value, $field, Validator $v) {
     $v->setValue($field, random_int(100000, 999999));
+    return true;
+}, true);
+Validator::registerRule('baz', function ($value, $field, Validator $v, $arg) {
+    $v->setValue($field, $arg);
+    return true;
 }, true);
 
 try {
@@ -63,6 +68,9 @@ try {
         'my_foo' => ['foo'],
         'my_bar' => 'bar',
         'random' => 'random',
+        'multi1' => 'random|foo|bar',
+        'multi2' => ['random', 'foo', 'bar'],
+        'my_baz' => 'baz:123456',
     ])->messages([
         'my_foo.foo' => 'my_foo不满足foo',
         'my_bar.bar' => 'my_bar不满足foo',
@@ -70,7 +78,10 @@ try {
     print_r($v->errors());
     print_r($v->firstError().PHP_EOL);
     print_r($v->firstError('phone_no').PHP_EOL);
-    print_r($v->getValue('random'));
+    print_r($v->getValue('random').PHP_EOL);
+    print_r($v->getValue('multi1').PHP_EOL);
+    print_r($v->getValue('multi2').PHP_EOL);
+    print_r($v->getValue('my_baz').PHP_EOL);
 } catch (Exception $e) {
     echo $e->getMessage(). PHP_EOL;
 }
