@@ -40,6 +40,9 @@ Validator::registerRule('foo', function ($value) {
     return $value === 'foo';
 });
 Validator::registerRule('bar', [new BarValidate, 'validate']);
+Validator::registerRule('random', function ($value, $field, Validator $v) {
+    $v->setValue($field, random_int(100000, 999999));
+}, true);
 
 try {
     $v = Validator::make([
@@ -59,6 +62,7 @@ try {
         'phone_no' => ['length_min' => 10],
         'my_foo' => ['foo'],
         'my_bar' => 'bar',
+        'random' => 'random',
     ])->messages([
         'my_foo.foo' => 'my_foo不满足foo',
         'my_bar.bar' => 'my_bar不满足foo',
@@ -66,6 +70,7 @@ try {
     print_r($v->errors());
     print_r($v->firstError().PHP_EOL);
     print_r($v->firstError('phone_no').PHP_EOL);
+    print_r($v->getValue('random'));
 } catch (Exception $e) {
     echo $e->getMessage(). PHP_EOL;
 }

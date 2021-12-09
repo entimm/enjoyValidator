@@ -2,7 +2,6 @@
 
 namespace EnjoyValidator;
 
-use Closure;
 use InvalidArgumentException;
 
 class Validator
@@ -45,7 +44,7 @@ class Validator
     /**
      * 外部注册的规则
      */
-    private static $registerRules = [];
+    private static $registeredRules = [];
 
     /**
      * 消息
@@ -89,6 +88,8 @@ class Validator
         'default',
         'null',
     ];
+
+    static $registeredMust = [];
 
     public function __construct($data)
     {
@@ -165,7 +166,7 @@ class Validator
         $this->fields[$field][$rule] = $args;
 
         $value = $this->getValue($field);
-        if (Helper::blank($value) && !in_array($rule, self::MUST)) return;
+        if (Helper::blank($value) && !in_array($rule, array_merge(self::MUST, self::$registeredMust))) return;
 
         if ($this->valid($field, $value, $rule, $args)) return;
 
@@ -269,8 +270,8 @@ class Validator
      */
     protected function valid($field, $value, $rule, $args)
     {
-        if (isset(self::$registerRules[$rule])) {
-            return call_user_func(self::$registerRules[$rule], $value, $this);
+        if (isset(self::$registeredRules[$rule])) {
+            return call_user_func(self::$registeredRules[$rule], $value, $field, $this);
         }
 
         $method = 'rule'.ucwords(implode(array_map(function ($item) {
@@ -419,8 +420,12 @@ class Validator
     /**
      * 注入规则验证器
      */
-    public static function registerRule($name, callable $rule)
+    public static function registerRule($name, callable $rule, $must = false)
     {
-        self::$registerRules[$name] = $rule;
+        self::$registeredRules[$name] = $rule;
+
+        if ($must) {
+            self::$registeredMust[] = $name;
+        }
     }
 }
