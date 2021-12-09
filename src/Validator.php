@@ -278,7 +278,7 @@ class Validator
                 return ucwords($item);
             }, explode('_', $rule))));
 
-        return call_user_func([$this->ruleHandler, $method], $field, $value, ...$args);
+        return call_user_func([$this->ruleHandler, $method], $value, $field, ...$args);
     }
 
     /**

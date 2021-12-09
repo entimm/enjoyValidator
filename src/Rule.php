@@ -20,7 +20,7 @@ class Rule
     /**
      * 不能为空
      */
-    public function ruleRequired($field, $value)
+    public function ruleRequired($value)
     {
         return !Helper::blank($value);
     }
@@ -28,7 +28,7 @@ class Rule
     /**
      * 值相等
      */
-    public function ruleEq($field, $value, $thatValue)
+    public function ruleEq($value, $field, $thatValue)
     {
         return $value == $thatValue;
     }
@@ -36,7 +36,7 @@ class Rule
     /**
      * 值不相等
      */
-    public function ruleNotEq($field, $value, $thatValue)
+    public function ruleNotEq($value, $field, $thatValue)
     {
         return $value != $thatValue;
     }
@@ -44,7 +44,7 @@ class Rule
     /**
      * 小于
      */
-    public function ruleLt($field, $value, $thatValue)
+    public function ruleLt($value, $field, $thatValue)
     {
         return $value < $thatValue;
     }
@@ -52,7 +52,7 @@ class Rule
     /**
      * 小于等于
      */
-    public function ruleLte($field, $value, $thatValue)
+    public function ruleLte($value, $field, $thatValue)
     {
         return $value <= $thatValue;
     }
@@ -60,7 +60,7 @@ class Rule
     /**
      * 大于
      */
-    public function ruleGt($field, $value, $thatValue)
+    public function ruleGt($value, $field, $thatValue)
     {
         return $value > $thatValue;
     }
@@ -68,7 +68,7 @@ class Rule
     /**
      * 大于等于
      */
-    public function ruleGte($field, $value, $thatValue)
+    public function ruleGte($value, $field, $thatValue)
     {
         return $value >= $thatValue;
     }
@@ -76,7 +76,7 @@ class Rule
     /**
      * 同意
      */
-    public function ruleAccepted($field, $value)
+    public function ruleAccepted($value)
     {
         $acceptable = array('yes', 'on', 1, '1', true);
 
@@ -86,7 +86,7 @@ class Rule
     /**
      * 数组类型
      */
-    public function ruleArr($field, $value)
+    public function ruleArr($value)
     {
         return is_array($value);
     }
@@ -94,7 +94,7 @@ class Rule
     /**
      * json字符串
      */
-    public function ruleJson($field, $value)
+    public function ruleJson($value, $field)
     {
         $arr = json_decode($value, true);
 
@@ -108,7 +108,7 @@ class Rule
     /**
      * 数字类型
      */
-    public function ruleNumeric($field, $value)
+    public function ruleNumeric($value)
     {
         return is_numeric($value);
     }
@@ -116,7 +116,7 @@ class Rule
     /**
      * 整数（可负数）
      */
-    public function ruleInteger($field, $value)
+    public function ruleInteger($value)
     {
         return preg_match('/^([0-9]|-?[1-9][0-9]*)$/i', $value);
     }
@@ -124,7 +124,7 @@ class Rule
     /**
      * 纯数字（非负数）
      */
-    public function ruleNumber($field, $value)
+    public function ruleNumber($value)
     {
         return preg_match('/^([0-9]|[1-9][0-9]*)$/i', $value);
     }
@@ -133,7 +133,7 @@ class Rule
      * 多个非负纯数字，逗号分隔
      * 可设置非负数
      */
-    public function ruleMultiNumber($field, $value)
+    public function ruleMultiNumber($value)
     {
         // 严格模式（不支持前缀+）
         return preg_match('/^(\d+,)*\d+$/', $value);
@@ -142,7 +142,7 @@ class Rule
     /**
      * 字符串长度相等
      */
-    public function ruleLength($field, $value, $thatLength)
+    public function ruleLength($value, $field, $thatLength)
     {
         return $this->stringLength($value) == $thatLength;
     }
@@ -150,7 +150,7 @@ class Rule
     /**
      * 数字不小于
      */
-    public function ruleMin($field, $value, $min)
+    public function ruleMin($value, $field, $min)
     {
         return $min <= $value;
     }
@@ -158,7 +158,7 @@ class Rule
     /**
      * 数字不大于
      */
-    public function ruleMax($field, $value, $max)
+    public function ruleMax($value, $field, $max)
     {
         return $max >= $value;
     }
@@ -166,7 +166,7 @@ class Rule
     /**
      * 区间（数字、数组计数、字符长度）
      */
-    public function ruleBetween($field, $value, $min, $max)
+    public function ruleBetween($value, $field, $min, $max)
     {
         return $max >= $value && $value >= $min;
     }
@@ -174,7 +174,7 @@ class Rule
     /**
      * 字符长度不小于
      */
-    public function ruleLengthMin($field, $value, $min)
+    public function ruleLengthMin($value, $field, $min)
     {
         return $min <= $this->stringLength($value);
     }
@@ -182,7 +182,7 @@ class Rule
     /**
      * 字符长度不大于
      */
-    public function ruleLengthMax($field, $value, $max)
+    public function ruleLengthMax($value, $field, $max)
     {
         return $max >= $this->stringLength($value);
     }
@@ -190,7 +190,7 @@ class Rule
     /**
      * 字符长度区间
      */
-    public function ruleLengthBetween($field, $value, $min, $max)
+    public function ruleLengthBetween($value, $field, $min, $max)
     {
         $length = $this->stringLength($value);
 
@@ -200,7 +200,7 @@ class Rule
     /**
      * 数组项数不小于
      */
-    public function ruleCountMin($field, $value, $min)
+    public function ruleCountMin($value, $field, $min)
     {
         return $min <= count($value);
     }
@@ -208,7 +208,7 @@ class Rule
     /**
      * 数组项数不大于
      */
-    public function ruleCountMax($field, $value, $max)
+    public function ruleCountMax($value, $field, $max)
     {
         return $max >= count($value);
     }
@@ -216,7 +216,7 @@ class Rule
     /**
      * 数组项数区间
      */
-    public function ruleCountBetween($field, $value, $min, $max)
+    public function ruleCountBetween($value, $field, $min, $max)
     {
         $count = count($value);
 
@@ -226,7 +226,7 @@ class Rule
     /**
      * 等于另一个字段
      */
-    public function ruleEqThan($field, $value, $another)
+    public function ruleEqThan($value, $field, $another)
     {
         return $value == $this->validator->getValue($another);
     }
@@ -234,7 +234,7 @@ class Rule
     /**
      * 等于另一个字段
      */
-    public function ruleNotEqThan($field, $value, $another)
+    public function ruleNotEqThan($value, $field, $another)
     {
         return $value != $this->validator->getValue($another);
     }
@@ -242,7 +242,7 @@ class Rule
     /**
      * 小于另一个字段
      */
-    public function ruleLtThan($field, $value, $another)
+    public function ruleLtThan($value, $field, $another)
     {
         return $value < $this->validator->getValue($another);
     }
@@ -250,7 +250,7 @@ class Rule
     /**
      * 小于等于另一个字段
      */
-    public function ruleLteThan($field, $value, $another)
+    public function ruleLteThan($value, $field, $another)
     {
         return $value <= $this->validator->getValue($another);
     }
@@ -258,7 +258,7 @@ class Rule
     /**
      * 大于另一个字段
      */
-    public function ruleGtThan($field, $value, $another)
+    public function ruleGtThan($value, $field, $another)
     {
         return $value > $this->validator->getValue($another);
     }
@@ -266,7 +266,7 @@ class Rule
     /**
      * 大于等于另一个字段
      */
-    public function ruleGteThan($field, $value, $another)
+    public function ruleGteThan($value, $field, $another)
     {
         return $value >= $this->validator->getValue($another);
     }
@@ -274,7 +274,7 @@ class Rule
     /**
      * 值在数组中
      */
-    public function ruleIn($field, $value, ...$args)
+    public function ruleIn($value, $field, ...$args)
     {
         $isAssoc = array_values($args) !== $args;
         if ($isAssoc) {
@@ -287,7 +287,7 @@ class Rule
     /**
      * 数组包含
      */
-    public function ruleListContains($field, $value, $item)
+    public function ruleListContains($value, $field, $item)
     {
         $isAssoc = array_values($value) !== $value;
         if ($isAssoc) {
@@ -300,7 +300,7 @@ class Rule
     /**
      * 值不在数组中
      */
-    public function ruleNotIn($field, $value, ...$args)
+    public function ruleNotIn($value, $field, ...$args)
     {
         return !$this->ruleIn($field, $value, ...$args);
     }
@@ -308,7 +308,7 @@ class Rule
     /**
      * 字符串包含
      */
-    public function ruleContains($field, $value, $subStr)
+    public function ruleContains($value, $field, $subStr)
     {
         if (!is_string($subStr) || !is_string($value)) {
             return false;
@@ -326,7 +326,7 @@ class Rule
     /**
      * 子数组包含
      */
-    public function ruleSubset($field, $value, array $parentList)
+    public function ruleSubset($value, $field, array $parentList)
     {
         if (is_scalar($value) || $value === null) {
             return $this->ruleIn($field, $value, $parentList);
@@ -340,7 +340,7 @@ class Rule
     /**
      * 数组有重复值
      */
-    public function ruleContainsUnique($field, $value)
+    public function ruleContainsUnique($value)
     {
         if (!is_array($value)) {
             return false;
@@ -352,7 +352,7 @@ class Rule
     /**
      * IP
      */
-    public function ruleIp($field, $value)
+    public function ruleIp($value)
     {
         return filter_var($value, FILTER_VALIDATE_IP) !== false;
     }
@@ -360,7 +360,7 @@ class Rule
     /**
      * IP4
      */
-    public function ruleIpv4($field, $value)
+    public function ruleIpv4($value)
     {
         return filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false;
     }
@@ -368,7 +368,7 @@ class Rule
     /**
      * IP6
      */
-    public function ruleIpv6($field, $value)
+    public function ruleIpv6($value)
     {
         return filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false;
     }
@@ -376,7 +376,7 @@ class Rule
     /**
      * email
      */
-    public function ruleEmail($field, $value)
+    public function ruleEmail($value)
     {
         return filter_var($value, FILTER_VALIDATE_EMAIL) !== false;
     }
@@ -384,7 +384,7 @@ class Rule
     /**
      * ascii
      */
-    public function ruleAscii($field, $value)
+    public function ruleAscii($value)
     {
         if (function_exists('mb_detect_encoding')) {
             return mb_detect_encoding($value, 'ASCII', true);
@@ -396,7 +396,7 @@ class Rule
     /**
      * url
      */
-    public function ruleUrl($field, $value)
+    public function ruleUrl($value)
     {
         $validUrlPrefixes = ['http://', 'https://'];
         foreach ($validUrlPrefixes as $prefix) {
@@ -411,7 +411,7 @@ class Rule
     /**
      * 纯字母
      */
-    public function ruleAlpha($field, $value)
+    public function ruleAlpha($value)
     {
         return preg_match('/^([a-z])+$/i', $value);
     }
@@ -419,7 +419,7 @@ class Rule
     /**
      * 纯字母+数字
      */
-    public function ruleAlphaNum($field, $value)
+    public function ruleAlphaNum($value)
     {
         return preg_match('/^([a-z0-9])+$/i', $value);
     }
@@ -427,7 +427,7 @@ class Rule
     /**
      * 纯字母+数字+'-'+'_'
      */
-    public function ruleAlphaDash($field, $value)
+    public function ruleAlphaDash($value)
     {
         if (is_array($value)) {
             return false;
@@ -439,7 +439,7 @@ class Rule
     /**
      * 正则
      */
-    public function ruleRegex($field, $value, $regex)
+    public function ruleRegex($value, $field, $regex)
     {
         return preg_match($regex, $value);
     }
@@ -447,7 +447,7 @@ class Rule
     /**
      * 日期
      */
-    public function ruleDate($field, $value)
+    public function ruleDate($value)
     {
         $isDate = false;
         if ($value instanceof DateTime) {
@@ -462,7 +462,7 @@ class Rule
     /**
      * 指定格式日期
      */
-    public function ruleDateFormat($field, $value, $format)
+    public function ruleDateFormat($value, $field, $format)
     {
         $parsed = date_parse_from_format($format, $value);
 
@@ -472,7 +472,7 @@ class Rule
     /**
      * 日期之前
      */
-    public function ruleBefore($field, $value, $thatValue)
+    public function ruleBefore($value, $field, $thatValue)
     {
         $time1 = ($value instanceof DateTime) ? $value->getTimestamp() : strtotime($value);
         $time2 = ($thatValue instanceof DateTime) ? $thatValue->getTimestamp() : strtotime($thatValue);
@@ -483,7 +483,7 @@ class Rule
     /**
      * 日期之后
      */
-    public function ruleAfter($field, $value, $thatValue)
+    public function ruleAfter($value, $field, $thatValue)
     {
         $time1 = ($value instanceof DateTime) ? $value->getTimestamp() : strtotime($value);
         $time2 = ($thatValue instanceof DateTime) ? $thatValue->getTimestamp() : strtotime($thatValue);
@@ -494,7 +494,7 @@ class Rule
     /**
      * 日期跨度不大于
      */
-    public function ruleTimeScopeMax($field, $value, $another, $period)
+    public function ruleTimeScopeMax($value, $field, $another, $period)
     {
         $another = $this->validator->getValue($another);
 
@@ -504,7 +504,7 @@ class Rule
     /**
      * 日期跨度不小于
      */
-    public function ruleTimeScopeMin($field, $value, $another, $period)
+    public function ruleTimeScopeMin($value, $field, $another, $period)
     {
         $another = $this->validator->getValue($another);
 
@@ -514,7 +514,7 @@ class Rule
     /**
      * 验证的字段必须可以转换为 Boolean 类型
      */
-    public function ruleBoolean($field, $value)
+    public function ruleBoolean($value)
     {
         return in_array($value, [true, false, 1, 0, '1', '0']);
     }
@@ -522,7 +522,7 @@ class Rule
     /**
      * 对象类型归属
      */
-    public function ruleInstanceOf($field, $value, $thatValue)
+    public function ruleInstanceOf($value, $field, $thatValue)
     {
         $isInstanceOf = false;
         if (is_object($value)) {
@@ -545,7 +545,7 @@ class Rule
     /**
      * 转分隔字符串为数组
      */
-    public function ruleToArray($field, $value, $type = 1)
+    public function ruleToArray($value, $field, $type = 1)
     {
         $separateSymbols = [
             1 => ',',
@@ -565,7 +565,7 @@ class Rule
     /**
      * 多个逗号分隔的相同规则验证，并替换成数组
      */
-    public function ruleItem($field, $valueArr, $anotherRule, ...$args)
+    public function ruleItem($valueArr, $field, $anotherRule, ...$args)
     {
         $anotherRule = implode(array_map(function ($item) {
             return ucwords($item);
@@ -584,7 +584,7 @@ class Rule
     /**
      * 当字段2在时，字段1也要在
      */
-    public function ruleRequiredWith($field, $value, $another)
+    public function ruleRequiredWith($value, $field, $another)
     {
         return !Helper::blank($this->validator->getValue($another)) && !Helper::blank($value);
     }
@@ -592,7 +592,7 @@ class Rule
     /**
      * 当字段2不在时，字段1要在
      */
-    public function ruleRequiredWithout($field, $value, $another)
+    public function ruleRequiredWithout($value, $field, $another)
     {
         return Helper::blank($this->validator->getValue($another)) && !Helper::blank($value);
     }
@@ -600,7 +600,7 @@ class Rule
     /**
      * 默认值
      */
-    public function ruleDefault($field, $value, $default = '')
+    public function ruleDefault($value, $field, $default = '')
     {
         if (Helper::blank($value)) {
             switch ($default) {
@@ -621,7 +621,7 @@ class Rule
     /**
      * datetime start
      */
-    public function ruleToDateTimeStart($field, $value)
+    public function ruleToDateTimeStart($value, $field)
     {
         if (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $value)) {
             $this->validator->setValue($field, $value.' 00:00:00');
@@ -633,7 +633,7 @@ class Rule
     /**
      * datetime end
      */
-    public function ruleToDateTimeEnd($field, $value)
+    public function ruleToDateTimeEnd($value, $field)
     {
         if (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $value)) {
             $this->validator->setValue($field, $value.' 23:59:59');
@@ -645,7 +645,7 @@ class Rule
     /**
      * 默认值null
      */
-    public function ruleAssign($field, $value, $assignValue = '')
+    public function ruleAssign($value, $field, $assignValue = '')
     {
         switch ($assignValue) {
             case '0':
@@ -663,7 +663,7 @@ class Rule
     /**
      * 赋值于另一字段的值
      */
-    public function ruleAssignWith($field, $value, $another)
+    public function ruleAssignWith($value, $field, $another)
     {
         $this->validator->setValue($field, $this->validator->getValue($another));
 
@@ -673,7 +673,7 @@ class Rule
     /**
      * 可选
      */
-    public function ruleOptional($field, $value)
+    public function ruleOptional($value)
     {
         return true;
     }
